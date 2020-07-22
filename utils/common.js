@@ -1,5 +1,4 @@
 const logger = require("./logger");
-const {sendResponse} = require("./send-response");
 // const  = require("./send-response");
 
 const wrapInArray = (a) => { return a instanceof Array ? a : a ? [a] : [];}
@@ -24,8 +23,18 @@ const wrapServiceResult = (value, errors) => {
  }
 }
 
+const sendResponse = (res, status, message, headers, errors, data) => {
+	res.status(status || 200).send({
+		status,
+		message: wrapInArray(message),
+		data,
+		errors: wrapInArray(errors),
+	});
+}
+
 module.exports = {
 	wrapInArray,
 	withFailSafe,
-	wrapServiceResult
+	wrapServiceResult,
+	sendResponse
 }

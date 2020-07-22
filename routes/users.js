@@ -2,15 +2,23 @@ var express = require("express");
 const logger = require("../utils/logger");
 var router = express.Router();
 const userService = require("../service/user-service");
-const  {sendResponse}  = require("../utils/send-response");
-const { withFailSafe } = require("../utils/common");
+const { withFailSafe, sendResponse } = require("../utils/common");
 const messages = require("../utils/messages");
 const { isEmpty } = require("lodash");
 
 /* GET users listing. */
-router.get("/", function (req, res, next) {
-  res.send("respond with a pump");
-});
+router.get("/", (req, res) =>
+  withFailSafe(
+    [],
+    messages.FAILED_TO_FETCH_USERS
+  )(async (req, res) => {
+    const { value, errors } = await userService.getUsers(req.query);
+    if (isEmpty(errors)) {
+      return sendResponse(res, 200, messages.SUCCESS, {}, [], value);
+    }
+    return sendResponse(res, 400, messages.SUCCESS, {}, errors, []);
+  })(req, res)
+);
 
 router.post("/", (req, res) =>
   withFailSafe(
