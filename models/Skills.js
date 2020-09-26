@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-var userSchema = new Schema({
+var skillsSchema = new Schema({
 	username:  { type: String, unique: true },
 	password: { type: String, required: true},
 	email: { type: String, required: true, unique: true, index: true },
@@ -10,4 +10,4 @@ var userSchema = new Schema({
 	mobile: { type: String, required: true },
 });
 
-module.exports = mongoose.model('Users', userSchema);
+module.exports = mongoose.model('Skills', skillsSchema);

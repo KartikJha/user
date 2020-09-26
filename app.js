@@ -20,6 +20,8 @@ var schema = buildSchema(`
 var root = { hello: () => 'Hello world!' };
 
 var app = express();
+var v1Router = express.Router();
+
 app.use('/graphql', graphqlHTTP({
   schema: schema,
   rootValue: root,
@@ -33,8 +35,9 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+v1Router.use('/', indexRouter);
+v1Router.use('/users', usersRouter);
+app.use('/v1', v1Router);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
